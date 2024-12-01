@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot with Mic Access</title>
+  <style>
+    /* Import Inter font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f9f9f9; /* Clean background */
+      color: #333; /* Neutral text color */
+    }
+
+    .welcome-text {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .welcome-text h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .welcome-text p {
+      font-size: 16px;
+      font-weight: 400;
+      margin: 5px 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-text">
+    <h1>Hi, I'm NextFlix.</h1>
+    <p>Click on the blue chat icon to get started!</p>
+  </div>
+
+  <div id="chat-container"></div>
+
+  <script type="text/javascript">
+    (function(d, t) {
+      const hasAskedForMic = localStorage.getItem("micAccessAsked");
+
+      if (!hasAskedForMic) {
+        // Prompt user for mic access only the first time
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(() => {
+            console.log("Microphone access granted.");
+            localStorage.setItem("micAccessAsked", "true");
+          })
+          .catch((error) => {
+            console.error("Microphone access denied or error:", error);
+            localStorage.setItem("micAccessAsked", "true"); // Still store to avoid repeated prompts
+          });
+      }
+
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '673e6e96dd7483efefe08031' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production'
+        });
+      };
+      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs";
+      v.type = "text/javascript";
+      s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+  </script>
+</body>
+</html>
